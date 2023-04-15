@@ -5,6 +5,11 @@ import json
 import psutil
 import time
 from decimal import Decimal
+import pickle
+import pandas as pd
+
+# load the model
+model = pickle.load(open('rf_model.pkl', 'rb'))
 
 # Instantiate the app
 app = Flask(__name__)
@@ -14,15 +19,9 @@ class predict_model(Resource):
     def post(self):
         json_data = request.get_json()
 
-        variables = json_data
-        
-	#Put here your model.predict()
+        dfclone = pd.DataFrame(json_data, index=[0])
 
-        print('-'*100)
-        print(variables)
-        print('-'*100)
-
-        predict_result = 1
+        predict_result = model.predict(dfclone)[0]
         
         body = {
             "predict_result": predict_result
